@@ -1,6 +1,6 @@
 <?php
-require_once '../config/auth_check.php';
-require_once '../config/database.php';
+require_once __DIR__ . '/../config/auth_check.php';
+require_once __DIR__ . '/../config/database.php';
 
 $pageTitle = 'Dashboard - Sistem Absensi PMR';
 $baseUrl = '../';
@@ -57,7 +57,7 @@ if ($isAdmin) {
     ")->fetch_assoc();
 }
 
-include '../views/header.php';
+include __DIR__ . '/../views/header.php';
 ?>
 
 <?php if ($isAdmin): ?>
