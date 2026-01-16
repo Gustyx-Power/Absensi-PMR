@@ -4,13 +4,8 @@
  * Include this file at the top of any protected page
  */
 
-if (session_status() === PHP_SESSION_NONE) {
-    // Vercel/Serverless session fix
-    if (isset($_ENV['VERCEL']) || isset($_SERVER['VERCEL'])) {
-        session_save_path('/tmp');
-    }
-    session_start();
-}
+// Include DB Session Handler (Starts session automatically)
+require_once __DIR__ . '/session_handler.php';
 
 // Check if user is logged in
 if (!isset($_SESSION['is_login']) || $_SESSION['is_login'] !== true) {

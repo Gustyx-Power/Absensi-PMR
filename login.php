@@ -1,9 +1,5 @@
 <?php
-// Vercel/Serverless session fix
-if (isset($_ENV['VERCEL']) || isset($_SERVER['VERCEL'])) {
-    session_save_path('/tmp');
-}
-session_start();
+require_once __DIR__ . '/config/session_handler.php';
 
 // Redirect if already logged in
 if (isset($_SESSION['is_login']) && $_SESSION['is_login'] === true) {

@@ -1,9 +1,5 @@
 <?php
-// Vercel/Serverless session fix
-if (isset($_ENV['VERCEL']) || isset($_SERVER['VERCEL'])) {
-    session_save_path('/tmp');
-}
-session_start();
+require_once __DIR__ . '/config/session_handler.php';
 require_once 'config/database.php';
 
 header('Content-Type: application/json');

@@ -54,6 +54,14 @@ $queries = [
       KEY `event_id` (`event_id`),
       CONSTRAINT `attendance_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
       CONSTRAINT `attendance_ibfk_2` FOREIGN KEY (`event_id`) REFERENCES `events` (`id`) ON DELETE CASCADE
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4",
+
+    // 4. Sessions Table (For Serverless Support)
+    "CREATE TABLE IF NOT EXISTS `sessions` (
+        `id` varchar(128) NOT NULL,
+        `data` mediumtext NOT NULL,
+        `timestamp` int(11) NOT NULL,
+        PRIMARY KEY (`id`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4"
 ];
 
