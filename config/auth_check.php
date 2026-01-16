@@ -5,6 +5,10 @@
  */
 
 if (session_status() === PHP_SESSION_NONE) {
+    // Vercel/Serverless session fix
+    if (isset($_ENV['VERCEL']) || isset($_SERVER['VERCEL'])) {
+        session_save_path('/tmp');
+    }
     session_start();
 }
 

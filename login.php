@@ -1,9 +1,13 @@
 <?php
+// Vercel/Serverless session fix
+if (isset($_ENV['VERCEL']) || isset($_SERVER['VERCEL'])) {
+    session_save_path('/tmp');
+}
 session_start();
 
 // Redirect if already logged in
 if (isset($_SESSION['is_login']) && $_SESSION['is_login'] === true) {
-    header('Location: admin/dashboard.php');
+    header('Location: admin/index.php');
     exit;
 }
 
@@ -28,61 +32,44 @@ include 'views/header.php';
                     <small class="opacity-75">Masuk ke sistem absensi</small>
                 </div>
                 <div class="card-body p-4">
-                    
+
                     <?php if ($error): ?>
                         <div class="alert alert-danger alert-dismissible fade show" role="alert">
                             <i class="bi bi-exclamation-triangle me-2"></i><?= htmlspecialchars($error) ?>
                             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                         </div>
                     <?php endif; ?>
-                    
+
                     <?php if ($success): ?>
                         <div class="alert alert-success alert-dismissible fade show" role="alert">
                             <i class="bi bi-check-circle me-2"></i><?= htmlspecialchars($success) ?>
                             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                         </div>
                     <?php endif; ?>
-                    
+
                     <form action="auth_process.php" method="POST">
                         <div class="mb-3">
                             <label for="nis" class="form-label fw-semibold">
                                 <i class="bi bi-person me-1"></i>NIS / ID Pembina
                             </label>
-                            <input 
-                                type="text" 
-                                class="form-control form-control-lg" 
-                                id="nis" 
-                                name="nis" 
-                                placeholder="Masukkan NIS Anda"
-                                required 
-                                autofocus
-                            >
+                            <input type="text" class="form-control form-control-lg" id="nis" name="nis"
+                                placeholder="Masukkan NIS Anda" required autofocus>
                         </div>
-                        
+
                         <div class="mb-4">
                             <label for="password" class="form-label fw-semibold">
                                 <i class="bi bi-lock me-1"></i>Password
                             </label>
                             <div class="input-group">
-                                <input 
-                                    type="password" 
-                                    class="form-control form-control-lg" 
-                                    id="password" 
-                                    name="password" 
-                                    placeholder="Masukkan password"
-                                    required
-                                >
-                                <button 
-                                    class="btn btn-outline-secondary" 
-                                    type="button" 
-                                    id="togglePassword"
-                                    onclick="togglePasswordVisibility()"
-                                >
+                                <input type="password" class="form-control form-control-lg" id="password"
+                                    name="password" placeholder="Masukkan password" required>
+                                <button class="btn btn-outline-secondary" type="button" id="togglePassword"
+                                    onclick="togglePasswordVisibility()">
                                     <i class="bi bi-eye" id="toggleIcon"></i>
                                 </button>
                             </div>
                         </div>
-                        
+
                         <div class="d-grid">
                             <button type="submit" class="btn btn-danger btn-lg">
                                 <i class="bi bi-box-arrow-in-right me-2"></i>Login
@@ -96,7 +83,7 @@ include 'views/header.php';
                     </a>
                 </div>
             </div>
-            
+
             <div class="text-center mt-4">
                 <small class="text-muted">
                     <i class="bi bi-info-circle me-1"></i>
@@ -108,20 +95,20 @@ include 'views/header.php';
 </section>
 
 <script>
-function togglePasswordVisibility() {
-    const passwordInput = document.getElementById('password');
-    const toggleIcon = document.getElementById('toggleIcon');
-    
-    if (passwordInput.type === 'password') {
-        passwordInput.type = 'text';
-        toggleIcon.classList.remove('bi-eye');
-        toggleIcon.classList.add('bi-eye-slash');
-    } else {
-        passwordInput.type = 'password';
-        toggleIcon.classList.remove('bi-eye-slash');
-        toggleIcon.classList.add('bi-eye');
+    function togglePasswordVisibility() {
+        const passwordInput = document.getElementById('password');
+        const toggleIcon = document.getElementById('toggleIcon');
+
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            toggleIcon.classList.remove('bi-eye');
+            toggleIcon.classList.add('bi-eye-slash');
+        } else {
+            passwordInput.type = 'password';
+            toggleIcon.classList.remove('bi-eye-slash');
+            toggleIcon.classList.add('bi-eye');
+        }
     }
-}
 </script>
 
 <?php include 'views/footer.php'; ?>
