@@ -1,0 +1,191 @@
+/* ===========================================
+   PMR Attendance System - Custom Styles
+   =========================================== */
+
+:root {
+    --pmr-red: #dc3545;
+    --pmr-red-dark: #b02a37;
+    --pmr-white: #ffffff;
+    --pmr-gray: #f8f9fa;
+    --pmr-dark: #212529;
+}
+
+/* Base Styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--pmr-gray);
+}
+
+main {
+    flex: 1;
+}
+
+/* Hero Section */
+.hero-section {
+    background: linear-gradient(135deg, var(--pmr-red) 0%, var(--pmr-red-dark) 100%);
+    color: var(--pmr-white);
+    padding: 80px 0;
+}
+
+.hero-section h1 {
+    font-weight: 700;
+    font-size: 2.5rem;
+}
+
+.hero-section .lead {
+    opacity: 0.9;
+}
+
+/* Cards */
+.card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.card-header {
+    background-color: var(--pmr-red);
+    color: var(--pmr-white);
+    border-radius: 12px 12px 0 0 !important;
+    font-weight: 600;
+}
+
+/* Feature Cards */
+.feature-card {
+    text-align: center;
+    padding: 2rem;
+}
+
+.feature-card .icon {
+    font-size: 3rem;
+    color: var(--pmr-red);
+    margin-bottom: 1rem;
+}
+
+.feature-card h5 {
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+}
+
+/* Buttons */
+.btn-pmr {
+    background-color: var(--pmr-red);
+    border-color: var(--pmr-red);
+    color: var(--pmr-white);
+    padding: 0.5rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.btn-pmr:hover {
+    background-color: var(--pmr-red-dark);
+    border-color: var(--pmr-red-dark);
+    color: var(--pmr-white);
+}
+
+.btn-outline-pmr {
+    border-color: var(--pmr-red);
+    color: var(--pmr-red);
+    padding: 0.5rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.btn-outline-pmr:hover {
+    background-color: var(--pmr-red);
+    color: var(--pmr-white);
+}
+
+/* Tables */
+.table thead th {
+    background-color: var(--pmr-red);
+    color: var(--pmr-white);
+    font-weight: 600;
+    border: none;
+}
+
+/* Status Badges */
+.badge-hadir {
+    background-color: #198754;
+}
+
+.badge-izin {
+    background-color: #0dcaf0;
+}
+
+.badge-sakit {
+    background-color: #ffc107;
+    color: #000;
+}
+
+.badge-alpha {
+    background-color: #dc3545;
+}
+
+/* Login/Form Styles */
+.auth-container {
+    max-width: 450px;
+    margin: 0 auto;
+}
+
+.auth-card {
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.auth-card .card-header {
+    padding: 1.5rem;
+    text-align: center;
+}
+
+.auth-card .card-header h4 {
+    margin-bottom: 0;
+}
+
+/* Dashboard Widgets */
+.stat-card {
+    border-radius: 12px;
+    padding: 1.5rem;
+    color: var(--pmr-white);
+}
+
+.stat-card.bg-primary { background: linear-gradient(135deg, #0d6efd, #0a58ca) !important; }
+.stat-card.bg-success { background: linear-gradient(135deg, #198754, #146c43) !important; }
+.stat-card.bg-warning { background: linear-gradient(135deg, #ffc107, #e0a800) !important; color: #000; }
+.stat-card.bg-danger { background: linear-gradient(135deg, #dc3545, #b02a37) !important; }
+
+.stat-card .stat-icon {
+    font-size: 2.5rem;
+    opacity: 0.3;
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.stat-card h3 {
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .hero-section {
+        padding: 50px 0;
+    }
+    
+    .hero-section h1 {
+        font-size: 1.75rem;
+    }
+}
