@@ -3,19 +3,19 @@
     "builds": [
         {
             "src": "*.php",
-            "use": "vercel-php@0.6.0"
+            "use": "vercel-php@0.7.0"
         },
         {
             "src": "admin/*.php",
-            "use": "vercel-php@0.6.0"
+            "use": "vercel-php@0.7.0"
         },
         {
             "src": "config/*.php",
-            "use": "vercel-php@0.6.0"
+            "use": "vercel-php@0.7.0"
         },
         {
             "src": "views/*.php",
-            "use": "vercel-php@0.6.0"
+            "use": "vercel-php@0.7.0"
         },
         {
             "src": "assets/**",
