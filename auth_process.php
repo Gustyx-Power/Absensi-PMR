@@ -47,7 +47,8 @@ if ($result->num_rows === 1) {
         $stmt->close();
 
         // Redirect to dashboard
-        header('Location: admin/dashboard.php');
+        // Redirect to dashboard (index.php handles role routing)
+        header('Location: admin/index.php');
         exit;
     } else {
         $_SESSION['login_error'] = 'Password yang Anda masukkan salah.';

@@ -69,7 +69,7 @@ function requireRole($allowedRoles, $redirectUrl = null)
 {
     if (!hasRole($allowedRoles)) {
         $_SESSION['error'] = 'Anda tidak memiliki akses ke halaman ini.';
-        $redirect = $redirectUrl ?? getBaseUrl() . 'admin/dashboard.php';
+        $redirect = $redirectUrl ?? getBaseUrl() . 'admin/index.php';
         header('Location: ' . $redirect);
         exit;
     }
