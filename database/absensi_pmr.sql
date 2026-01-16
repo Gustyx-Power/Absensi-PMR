@@ -69,18 +69,10 @@ CREATE TABLE `attendance` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- =============================================
--- Sample Data: Users
+-- Sample Data: Users (Handled by install.php)
 -- =============================================
-INSERT INTO `users` (`nis`, `nama`, `kelas`, `jabatan`, `password`) VALUES
-('PMR001', 'Dr. Siti Pembina', NULL, 'Pembina', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'),
-('PMR002', 'Ahmad Ketua', '12 IPA 1', 'Pengurus', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'),
-('PMR003', 'Budi Santoso', '11 IPA 2', 'Anggota', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'),
-('PMR004', 'Citra Dewi', '11 IPS 1', 'Anggota', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'),
-('PMR005', 'Dani Pratama', '10 IPA 1', 'Anggota', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi');
+-- Data removed to use custom seed via install script
 
--- Note: Default password for all users is "password"
-
--- =============================================
 -- Sample Data: Events
 -- =============================================
 INSERT INTO `events` (`nama_kegiatan`, `tanggal`, `jam_mulai`, `tolerance_time`, `jam_selesai`, `batas_pulang`, `deskripsi`) VALUES
