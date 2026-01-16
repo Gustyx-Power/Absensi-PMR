@@ -1,19 +1,19 @@
 </main>
 
 <!-- Footer -->
-<footer class="bg-dark text-white py-4 mt-5">
+<footer class="bg-dark text-white py-4 mt-auto">
     <div class="container">
-        <div class="row">
+        <div class="row align-items-center">
             <div class="col-md-6">
-                <h5 class="mb-3">
+                <h6 class="mb-2">
                     <i class="bi bi-plus-lg text-danger me-2"></i>PMR Attendance System
-                </h5>
-                <p class="text-muted mb-0">
+                </h6>
+                <p class="text-muted mb-0 small">
                     Sistem Absensi Digital untuk Palang Merah Remaja
                 </p>
             </div>
-            <div class="col-md-6 text-md-end">
-                <p class="text-muted mb-0 mt-3 mt-md-4">
+            <div class="col-md-6 text-md-end mt-3 mt-md-0">
+                <p class="text-muted mb-0 small">
                     &copy;
                     <?= date('Y') ?> PMR. All rights reserved.
                 </p>
