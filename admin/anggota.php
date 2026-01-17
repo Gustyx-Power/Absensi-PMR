@@ -33,7 +33,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmt = $conn->prepare("UPDATE users SET nis=?, nama=?, kelas=?, jabatan=? WHERE id=?");
                 $stmt->bind_param("ssssi", $nis, $nama, $kelas, $jabatan, $user_id);
             }
-            $_SESSION[$stmt->execute() ? 'success' : 'error'] = $stmt->execute() ? 'Anggota berhasil diperbarui.' : 'Gagal memperbarui.';
+            $result = $stmt->execute();
+            $_SESSION[$result ? 'success' : 'error'] = $result ? 'Anggota berhasil diperbarui.' : 'Gagal memperbarui.';
             $stmt->close();
         } else {
             // Insert
@@ -43,7 +44,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
                 $stmt = $conn->prepare("INSERT INTO users (nis, nama, kelas, jabatan, password) VALUES (?, ?, ?, ?, ?)");
                 $stmt->bind_param("sssss", $nis, $nama, $kelas, $jabatan, $hashedPassword);
-                $_SESSION[$stmt->execute() ? 'success' : 'error'] = $stmt->execute() ? 'Anggota berhasil ditambahkan.' : 'NIS sudah terdaftar.';
+                try {
+                    $result = $stmt->execute();
+                    $_SESSION['success'] = 'Anggota berhasil ditambahkan.';
+                } catch (mysqli_sql_exception $e) {
+                    if (strpos($e->getMessage(), 'Duplicate') !== false) {
+                        $_SESSION['error'] = 'NIS sudah terdaftar dalam sistem.';
+                    } else {
+                        $_SESSION['error'] = 'Gagal menambahkan anggota: ' . $e->getMessage();
+                    }
+                }
                 $stmt->close();
             }
         }
