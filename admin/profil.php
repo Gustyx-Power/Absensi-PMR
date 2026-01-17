@@ -1,6 +1,6 @@
 <?php
-require_once '../config/auth_check.php';
-require_once '../config/database.php';
+require_once __DIR__ . '/../config/auth_check.php';
+require_once __DIR__ . '/../config/database.php';
 
 $pageTitle = 'Profil Saya - Sistem Absensi PMR';
 $baseUrl = '../';
@@ -69,7 +69,7 @@ $attendanceStats = $conn->query("
 
 $hadirPercent = $attendanceStats['total'] > 0 ? round(($attendanceStats['hadir'] / $attendanceStats['total']) * 100, 1) : 0;
 
-include '../views/header.php';
+include __DIR__ . '/../views/header.php';
 ?>
 
 <section class="py-4">
@@ -203,4 +203,4 @@ include '../views/header.php';
     </div>
 </section>
 
-<?php include '../views/footer.php'; ?>
+<?php include __DIR__ . '/../views/footer.php'; ?>

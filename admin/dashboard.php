@@ -242,4 +242,4 @@ include __DIR__ . '/../views/header.php';
     </div>
 </section>
 
-<?php include '../views/footer.php'; ?>
+<?php include __DIR__ . '/../views/footer.php'; ?>

@@ -1,6 +1,6 @@
 <?php
-require_once '../config/auth_check.php';
-require_once '../config/database.php';
+require_once __DIR__ . '/../config/auth_check.php';
+require_once __DIR__ . '/../config/database.php';
 
 requireRole(['Pembina', 'Pengurus']);
 
@@ -79,7 +79,7 @@ $notAttended = $conn->query("
     AND id NOT IN (SELECT user_id FROM attendance WHERE event_id = $event_id)
 ")->fetch_assoc()['count'];
 
-include '../views/header.php';
+include __DIR__ . '/../views/header.php';
 ?>
 
 <section class="py-4">
@@ -319,4 +319,4 @@ include '../views/header.php';
     }
 </script>
 
-<?php include '../views/footer.php'; ?>
+<?php include __DIR__ . '/../views/footer.php'; ?>

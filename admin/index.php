@@ -271,4 +271,4 @@ include __DIR__ . '/../views/header.php';
     </section>
 <?php endif; ?>
 
-<?php include '../views/footer.php'; ?>
+<?php include __DIR__ . '/../views/footer.php'; ?>

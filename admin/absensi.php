@@ -1,6 +1,6 @@
 <?php
-require_once '../config/auth_check.php';
-require_once '../config/database.php';
+require_once __DIR__ . '/../config/auth_check.php';
+require_once __DIR__ . '/../config/database.php';
 
 $pageTitle = 'Manajemen Absensi - Sistem Absensi PMR';
 $baseUrl = '../';
@@ -84,7 +84,7 @@ if (isset($_GET['delete']) && hasRole(['Pembina', 'Pengurus'])) {
     exit;
 }
 
-include '../views/header.php';
+include __DIR__ . '/../views/header.php';
 ?>
 
 <section class="py-4">
@@ -238,4 +238,4 @@ include '../views/header.php';
     </div>
 <?php endif; ?>
 
-<?php include '../views/footer.php'; ?>
+<?php include __DIR__ . '/../views/footer.php'; ?>

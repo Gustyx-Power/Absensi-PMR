@@ -1,6 +1,6 @@
 <?php
-require_once '../config/auth_check.php';
-require_once '../config/database.php';
+require_once __DIR__ . '/../config/auth_check.php';
+require_once __DIR__ . '/../config/database.php';
 
 requireRole(['Pembina', 'Pengurus']);
 
@@ -26,7 +26,7 @@ $months = [
 $currentMonth = (int) date('m');
 $currentYear = (int) date('Y');
 
-include '../views/header.php';
+include __DIR__ . '/../views/header.php';
 ?>
 
 <section class="py-4">
@@ -98,4 +98,4 @@ include '../views/header.php';
     </div>
 </section>
 
-<?php include '../views/footer.php'; ?>
+<?php include __DIR__ . '/../views/footer.php'; ?>
