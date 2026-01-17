@@ -1,9 +1,12 @@
 <?php
-// Start output buffering immediately to prevent any output before headers
-ob_start();
-
 require_once __DIR__ . '/../config/auth_check.php';
 require_once __DIR__ . '/../config/database.php';
+
+requireRole(['Pembina', 'Pengurus']);
+
+// Start output buffering AFTER auth checks to allow redirects
+ob_start();
+
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -11,8 +14,6 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
-
-requireRole(['Pembina', 'Pengurus']);
 
 // Helper function to convert column index (1-based) to Excel column letter
 function getColLetter($colIndex)
