@@ -62,4 +62,7 @@ if ($isCloud) {
 
 // Set charset
 $conn->set_charset('utf8mb4');
+
+// Set MySQL timezone to match PHP timezone (Asia/Jakarta = UTC+7)
+$conn->query("SET time_zone = '+07:00'");
 ?>
