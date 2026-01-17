@@ -1,4 +1,7 @@
 <?php
+// Start output buffering immediately to prevent any output before headers
+ob_start();
+
 require_once __DIR__ . '/../config/auth_check.php';
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -10,6 +13,18 @@ use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 
 requireRole(['Pembina', 'Pengurus']);
+
+// Helper function to convert column index (1-based) to Excel column letter
+function getColLetter($colIndex)
+{
+    $letter = '';
+    while ($colIndex > 0) {
+        $colIndex--;
+        $letter = chr(65 + ($colIndex % 26)) . $letter;
+        $colIndex = intval($colIndex / 26);
+    }
+    return $letter;
+}
 
 $month = (int) ($_GET['month'] ?? date('m'));
 $year = (int) ($_GET['year'] ?? date('Y'));
@@ -78,7 +93,7 @@ $statusCode = [
     'Alpha' => 'A'
 ];
 
-$statusColor = [
+$statusColorMap = [
     'H' => '008000', // Green
     'T' => 'FF8C00', // Orange
     'I' => '0066CC', // Blue
@@ -91,12 +106,14 @@ $spreadsheet = new Spreadsheet();
 $sheet = $spreadsheet->getActiveSheet();
 $sheet->setTitle('Rekap ' . $monthName);
 
+// Calculate last column
+$totalCols = 3 + count($events) + 5; // Fixed(3) + Events + Summary(5)
+$lastColLetter = getColLetter($totalCols);
+
 // ========================================
 // HEADER (Row 1-2)
 // ========================================
-$lastEventCol = count($events) > 0 ? chr(ord('D') + count($events) + 4) : 'H';
-
-$sheet->mergeCells("A1:{$lastEventCol}1");
+$sheet->mergeCells("A1:{$lastColLetter}1");
 $sheet->setCellValue('A1', 'REKAP ABSENSI PMR - ' . strtoupper($monthName) . ' ' . $year);
 $sheet->getStyle('A1')->applyFromArray([
     'font' => ['bold' => true, 'size' => 14, 'color' => ['rgb' => '800000']],
@@ -104,7 +121,7 @@ $sheet->getStyle('A1')->applyFromArray([
 ]);
 $sheet->getRowDimension(1)->setRowHeight(25);
 
-$sheet->mergeCells("A2:{$lastEventCol}2");
+$sheet->mergeCells("A2:{$lastColLetter}2");
 $sheet->setCellValue('A2', 'Diekspor: ' . date('d F Y, H:i') . ' | H=Hadir, T=Terlambat, I=Izin, S=Sakit, A=Alpha');
 $sheet->getStyle('A2')->applyFromArray([
     'font' => ['italic' => true, 'size' => 10],
@@ -115,34 +132,36 @@ $sheet->getStyle('A2')->applyFromArray([
 // TABLE HEADER (Row 4)
 // ========================================
 $headerRow = 4;
-$col = 'A';
+$colIndex = 1;
 
 // Fixed columns
-$sheet->setCellValue($col++ . $headerRow, 'No');
-$sheet->setCellValue($col++ . $headerRow, 'Nama');
-$sheet->setCellValue($col++ . $headerRow, 'Kelas');
+$sheet->setCellValue(getColLetter($colIndex) . $headerRow, 'No');
+$colIndex++;
+$sheet->setCellValue(getColLetter($colIndex) . $headerRow, 'Nama');
+$colIndex++;
+$sheet->setCellValue(getColLetter($colIndex) . $headerRow, 'Kelas');
+$colIndex++;
 
 // Dynamic event columns
 $eventCols = [];
 foreach ($events as $event) {
-    $cellRef = $col . $headerRow;
-    $eventCols[$event['id']] = $col;
-    $sheet->setCellValue($cellRef, date('d', strtotime($event['tanggal'])));
-    $sheet->getColumnDimension($col)->setWidth(5);
-    $col++;
+    $colLetter = getColLetter($colIndex);
+    $eventCols[$event['id']] = $colLetter;
+    $sheet->setCellValue($colLetter . $headerRow, date('d', strtotime($event['tanggal'])));
+    $sheet->getColumnDimension($colLetter)->setWidth(5);
+    $colIndex++;
 }
 
 // Summary columns
-$summaryStart = $col;
-$sheet->setCellValue($col++ . $headerRow, 'H');
-$sheet->setCellValue($col++ . $headerRow, 'T');
-$sheet->setCellValue($col++ . $headerRow, 'I');
-$sheet->setCellValue($col++ . $headerRow, 'S');
-$sheet->setCellValue($col++ . $headerRow, 'A');
-$lastCol = chr(ord($col) - 1);
+$summaryStartIndex = $colIndex;
+$summaryLabels = ['H', 'T', 'I', 'S', 'A'];
+foreach ($summaryLabels as $label) {
+    $sheet->setCellValue(getColLetter($colIndex) . $headerRow, $label);
+    $colIndex++;
+}
 
 // Style header row
-$sheet->getStyle("A{$headerRow}:{$lastCol}{$headerRow}")->applyFromArray([
+$sheet->getStyle("A{$headerRow}:{$lastColLetter}{$headerRow}")->applyFromArray([
     'font' => ['bold' => true, 'size' => 10],
     'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['rgb' => 'FFFF00']],
     'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER, 'vertical' => Alignment::VERTICAL_CENTER],
@@ -157,12 +176,15 @@ $row = 5;
 $no = 1;
 
 foreach ($users as $user) {
-    $col = 'A';
+    $colIndex = 1;
 
     // Fixed columns
-    $sheet->setCellValue($col++ . $row, $no++);
-    $sheet->setCellValue($col++ . $row, $user['nama']);
-    $sheet->setCellValue($col++ . $row, $user['kelas'] ?? '-');
+    $sheet->setCellValue(getColLetter($colIndex) . $row, $no);
+    $no++;
+    $colIndex++;
+    $sheet->setCellValue(getColLetter($colIndex) . $row, $user['nama']);
+    $colIndex++;
+    $sheet->setCellValue(getColLetter($colIndex) . $row, $user['kelas'] ?? '-');
 
     // Status counts
     $counts = ['H' => 0, 'T' => 0, 'I' => 0, 'S' => 0, 'A' => 0];
@@ -175,9 +197,9 @@ foreach ($users as $user) {
         $sheet->setCellValue($cellRef, $code);
 
         // Color coding
-        if (isset($statusColor[$code])) {
+        if (isset($statusColorMap[$code])) {
             $sheet->getStyle($cellRef)->applyFromArray([
-                'font' => ['bold' => true, 'color' => ['rgb' => $statusColor[$code]]]
+                'font' => ['bold' => true, 'color' => ['rgb' => $statusColorMap[$code]]]
             ]);
             $counts[$code]++;
         }
@@ -186,21 +208,16 @@ foreach ($users as $user) {
     }
 
     // Summary columns
-    $sheet->setCellValue($summaryStart . $row, $counts['H']);
-    $sheet->setCellValue(chr(ord($summaryStart) + 1) . $row, $counts['T']);
-    $sheet->setCellValue(chr(ord($summaryStart) + 2) . $row, $counts['I']);
-    $sheet->setCellValue(chr(ord($summaryStart) + 3) . $row, $counts['S']);
-    $sheet->setCellValue(chr(ord($summaryStart) + 4) . $row, $counts['A']);
-
-    // Style summary with colors
-    $sheet->getStyle($summaryStart . $row)->getFont()->setColor(new \PhpOffice\PhpSpreadsheet\Style\Color('008000'));
-    $sheet->getStyle(chr(ord($summaryStart) + 1) . $row)->getFont()->setColor(new \PhpOffice\PhpSpreadsheet\Style\Color('FF8C00'));
-    $sheet->getStyle(chr(ord($summaryStart) + 2) . $row)->getFont()->setColor(new \PhpOffice\PhpSpreadsheet\Style\Color('0066CC'));
-    $sheet->getStyle(chr(ord($summaryStart) + 3) . $row)->getFont()->setColor(new \PhpOffice\PhpSpreadsheet\Style\Color('666666'));
-    $sheet->getStyle(chr(ord($summaryStart) + 4) . $row)->getFont()->setColor(new \PhpOffice\PhpSpreadsheet\Style\Color('FF0000'));
+    $summaryColors = ['008000', 'FF8C00', '0066CC', '666666', 'FF0000'];
+    $summaryKeys = ['H', 'T', 'I', 'S', 'A'];
+    for ($i = 0; $i < 5; $i++) {
+        $sumColLetter = getColLetter($summaryStartIndex + $i);
+        $sheet->setCellValue($sumColLetter . $row, $counts[$summaryKeys[$i]]);
+        $sheet->getStyle($sumColLetter . $row)->getFont()->setColor(new \PhpOffice\PhpSpreadsheet\Style\Color($summaryColors[$i]));
+    }
 
     // Borders for row
-    $sheet->getStyle("A{$row}:{$lastCol}{$row}")->applyFromArray([
+    $sheet->getStyle("A{$row}:{$lastColLetter}{$row}")->applyFromArray([
         'borders' => ['allBorders' => ['borderStyle' => Border::BORDER_THIN]],
         'alignment' => ['vertical' => Alignment::VERTICAL_CENTER]
     ]);
@@ -216,7 +233,7 @@ $sheet->setCellValue('A' . $legendRow, 'Keterangan Kegiatan:');
 $sheet->getStyle('A' . $legendRow)->getFont()->setBold(true);
 
 $legendRow++;
-foreach ($events as $idx => $event) {
+foreach ($events as $event) {
     $sheet->setCellValue('A' . $legendRow, date('d', strtotime($event['tanggal'])) . ' = ' . $event['nama_kegiatan'] . ' (' . date('d/m/Y', strtotime($event['tanggal'])) . ')');
     $legendRow++;
 }
@@ -230,7 +247,7 @@ $sheet->getColumnDimension('C')->setWidth(12);
 
 // Summary columns width
 for ($i = 0; $i < 5; $i++) {
-    $sheet->getColumnDimension(chr(ord($summaryStart) + $i))->setWidth(5);
+    $sheet->getColumnDimension(getColLetter($summaryStartIndex + $i))->setWidth(5);
 }
 
 // ========================================
@@ -238,7 +255,10 @@ for ($i = 0; $i < 5; $i++) {
 // ========================================
 $filename = "Rekap_Absensi_{$monthName}_{$year}.xlsx";
 
-ob_end_clean();
+// Clean any previous output
+if (ob_get_level()) {
+    ob_end_clean();
+}
 
 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 header('Content-Disposition: attachment;filename="' . $filename . '"');

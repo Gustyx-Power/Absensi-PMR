@@ -1,4 +1,7 @@
 <?php
+// Start output buffering immediately to prevent any output before headers
+ob_start();
+
 require_once __DIR__ . '/../config/auth_check.php';
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -103,11 +106,10 @@ $sheet->getRowDimension(3)->setRowHeight(10);
 // ========================================
 $headerRow = 4;
 $headers = ['No', 'NIS', 'Nama', 'Kelas', 'Kegiatan', 'Tanggal', 'Jam Masuk', 'Jam Pulang', 'Status'];
+$columns = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
 
-$col = 'A';
-foreach ($headers as $header) {
-    $sheet->setCellValue($col . $headerRow, $header);
-    $col++;
+foreach ($headers as $index => $header) {
+    $sheet->setCellValue($columns[$index] . $headerRow, $header);
 }
 
 $sheet->getStyle('A' . $headerRow . ':I' . $headerRow)->applyFromArray([
